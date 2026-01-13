@@ -1,0 +1,17 @@
+{
+    "name": "CollectionSystemAssembly",
+    "rootNamespace": "",
+    "references": [
+        "GUID:dc6b1cfd2cda163449f404f1bc5a2c27",
+        "GUID:aba23386ff365fd4f902493a3c230632"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

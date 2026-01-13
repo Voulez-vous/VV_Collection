@@ -1,0 +1,18 @@
+{
+    "name": "CollectionEditorAssembly",
+    "rootNamespace": "",
+    "references": [
+        "GUID:95a691695a7ee1641b85fdf9e2f8361b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,23 @@
+{
+  "name": "com.vv.collection",
+  "defineConstraints": [
+    "COLLECTION_DEPENDENCIES_LOADED"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.vv.utility",
+      "expression": ">=0.0.2",
+      "define": "VV_UTILITY_LOADED"
+    }
+  ],
+  "displayName": "VV Collections",
+  "version": "0.0.1",
+  "unity": "6000.0",
+  "dependencies": {
+    "com.vv.utility": "0.0.2"
+  },
+  "keywords": [
+    "collection"
+  ],
+  "type": "tool"
+}
