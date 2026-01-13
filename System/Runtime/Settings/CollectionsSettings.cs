@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using VV.Utility;
 
@@ -38,7 +39,7 @@ namespace VV.Collecting
                      "    [Serializable]\n" +
                      $"    public enum {fileName.Replace(".cs", "")}\n" +
                      "    {\n");
-            foreach (CollectionSO collection in activeCollections)
+            foreach (CollectionSO collection in activeCollections.Where(collection => collection != null && !string.IsNullOrEmpty(collection.CollectionName)))
             {
                 sr.WriteLine("        " + collection.CollectionName.Replace(" ", "") + ",");
             }
