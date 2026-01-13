@@ -19,5 +19,6 @@
   "keywords": [
     "collection"
   ],
-  "type": "tool"
+  "type": "tool",
+  "description": "This system aims to provide a fully generic system to create collectable items. Multiplayer compatible."
 }
