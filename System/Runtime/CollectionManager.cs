@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using VV.Utility;
 using Object = UnityEngine.Object;
 
 namespace VV.Collecting
@@ -43,15 +41,10 @@ namespace VV.Collecting
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeInitialized()
         {
-            Debug.Log($"CollectionManager::OnRuntimeInitialized");
-            
             try
             {
                 CollectionsSettings customSettings = Resources.Load<CollectionsSettings>(CollectionsSettings.SettingsName);
                 if(customSettings == null) return;
-                    
-                Debug.Log($"CollectionManager initialization in progress...");
-                Debug.Log($"Nb collections : {customSettings.activeCollections.Count}");
                 
                 GameObject runtimeCollections = new GameObject("Collections");
                 Object.DontDestroyOnLoad(runtimeCollections);
@@ -67,8 +60,7 @@ namespace VV.Collecting
                         
                     GenerateCollection(collectionSO, type, runtimeCollections.transform);
                 }
-                    
-                Debug.Log($"RuntimeCollectionsInitialized with {RuntimeCollections.Count} items.");
+                
                 RuntimeCollectionsInitialized?.Invoke();
             }
             catch (Exception e)
@@ -116,7 +108,6 @@ namespace VV.Collecting
                 
                 RuntimeCollections.Add(collectionType, collection);
                 CollectionIdToType.Add(collectionSo.UniqueId, collectionType);
-                Debug.Log($"{collectionSo.CollectionName} RuntimeCollection successfully initialized !");
                 OnCollectionInitialized?.Invoke(collectionType);
             }
             catch (Exception e)
@@ -145,7 +136,6 @@ namespace VV.Collecting
             }
         }
 
-        // TODO : ask parameter collectionID
         public static bool IsCollected(string collectableId)
         {
             return CollectionIdToType.TryGetValue(collectableId, out CollectionType type) && 
@@ -153,7 +143,13 @@ namespace VV.Collecting
                    RuntimeCollections[type].Contains(collectableId);
         }
         
-        // TODO : ask parameter collectionID
+        public static bool IsCollected(string collectionId, string collectableId)
+        {
+            return CollectionIdToType.TryGetValue(collectionId, out CollectionType type) && 
+                   RuntimeCollections.ContainsKey(type) && 
+                   RuntimeCollections[type].Contains(collectableId);
+        }
+        
         public static bool IsCollected(string collectableId, CollectionType type)
         {
             return RuntimeCollections.ContainsKey(type) && 
@@ -165,7 +161,6 @@ namespace VV.Collecting
             bool isCollected = Enum.TryParse(collectable.CollectionSO.CollectionName, out CollectionType type) &&
                                RuntimeCollections.ContainsKey(type) && 
                                RuntimeCollections[type].Contains(collectable);
-            // Debug.Log($"{collectable.CollectionSO.CollectionName} IsCollected:{isCollected}");
             return isCollected;
         }
 

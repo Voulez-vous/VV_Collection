@@ -46,13 +46,11 @@ namespace VV.Collecting
             if (collectedIds.Contains(collectedId) || !collectable.CollectionName.Equals(CollectionSO.CollectionName))
                 return;
 
-            Debug.Log($"Collected {collectable.CollectionName} n°{collectable.CollectableSo.UniqueId}");
             collectedIds.Add(collectedId);
 
             AnyCollectableStored?.Invoke(this);
             CollectableStored?.Invoke(this);
             onCollectionProgressUpdate?.Invoke(GenerateUpdateData());
-            // Debug.Log($"{collectable.CollectionName} n°{collectable.CollectableSo.UniqueId} successfully collected");
         }
         
         public bool Contains(Collectable collectable) => collectedIds.Contains(collectable.CollectableSo.UniqueId);

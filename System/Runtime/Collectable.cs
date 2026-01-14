@@ -56,12 +56,9 @@ namespace VV.Collecting
             CollectableSo.Collect(this);
         }
 #if UNITY_EDITOR
-        
-        
-        
+
         protected void OnCollectionSet()
         {
-            Debug.Log($"Collection {collectionSO.name} is set !");
             CollectionSetEvent?.Invoke(this);
         }
 

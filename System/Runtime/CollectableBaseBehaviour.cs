@@ -11,7 +11,6 @@ namespace VV.Collecting
         
         protected virtual void Start() {
             var collectable = GetComponent<Collectable>();
-            // Debug.Log($"Behaviour of {collectable.CollectionName} n°{collectable.Id} - enabled:{enabled} - activeSelf:{gameObject.activeSelf} - activeInHierarchy:{gameObject.activeInHierarchy}");
             enabled = Enum.TryParse(collectable.CollectionSO.CollectionName, out CollectionType collectionType) &&
                       CollectionManager.CollectionActivated(collectionType);
         }
