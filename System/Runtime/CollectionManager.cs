@@ -43,7 +43,7 @@ namespace VV.Collecting
         {
             try
             {
-                CollectionsSettings customSettings = Resources.Load<CollectionsSettings>(CollectionsSettings.SettingsName);
+                CollectionsSettings customSettings = Resources.Load<CollectionsSettings>(CollectionsSettings.SettingsResourceFullPath);
                 if(customSettings == null) return;
                 
                 GameObject runtimeCollections = new GameObject("Collections");
@@ -54,10 +54,13 @@ namespace VV.Collecting
 
                 foreach (CollectionSO collectionSO in customSettings.activeCollections)
                 {
-                    // TODO : Store generated collection type in the collectionSO
                     string normalizedCollectionName = collectionSO.CollectionName.Replace(" ", "");
-                    if (!Enum.TryParse(normalizedCollectionName, out CollectionType type)) continue;
-                        
+                    if (!Enum.TryParse(normalizedCollectionName, out CollectionType type))
+                    {
+                        Debug.LogError($"Collection {normalizedCollectionName} is not a valid collection name");
+                        continue;
+                    }
+                    
                     GenerateCollection(collectionSO, type, runtimeCollections.transform);
                 }
                 
@@ -76,8 +79,7 @@ namespace VV.Collecting
         /// <param name="collectionSo"></param>
         /// <param name="collectionType"></param>
         /// <param name="parent"></param>
-        private static void GenerateCollection(CollectionSO collectionSo, CollectionType collectionType,
-            Transform parent)
+        private static void GenerateCollection(CollectionSO collectionSo, CollectionType collectionType, Transform parent)
         {
             try
             {

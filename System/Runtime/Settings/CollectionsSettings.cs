@@ -13,7 +13,10 @@ namespace VV.Collecting
     public class CollectionsSettings : ScriptableObject
     {
         public static string SettingsName => "CollectionsSettings";
-        public static string SettingsPath => $"Assets/Resources/{SettingsName}.asset";
+        public static string SettingsResourcePath => $"VV/Collecting/";
+        public static string SettingsResourceFullPath => $"{SettingsResourcePath}{SettingsName}";
+        public static string SettingsPath => $"Assets/Resources/{SettingsResourcePath}";
+        public static string SettingsFullPath => $"{SettingsPath}/{SettingsName}.asset";
         
         [SerializeField] public List<CollectionSO> activeCollections = new();
 
@@ -39,9 +42,12 @@ namespace VV.Collecting
                      "    [Serializable]\n" +
                      $"    public enum {fileName.Replace(".cs", "")}\n" +
                      "    {\n");
-            foreach (CollectionSO collection in activeCollections.Where(collection => collection != null && !string.IsNullOrEmpty(collection.CollectionName)))
+            foreach (CollectionSO collection in 
+                     activeCollections
+                         .Where(collection => 
+                             collection != null && !string.IsNullOrEmpty(collection.CollectionName)))
             {
-                sr.WriteLine("        " + collection.CollectionName.Replace(" ", "") + ",");
+                sr.WriteLine($"        {collection.CollectionName.Replace(" ", "")},");
             }
             sr.WriteLine("        None,");
             
@@ -85,13 +91,16 @@ namespace VV.Collecting
 
         private static CollectionsSettings GetOrCreateSettings()
         {
-            var settings = AssetDatabase.LoadAssetAtPath<CollectionsSettings>(SettingsPath);
+            var settings = AssetDatabase.LoadAssetAtPath<CollectionsSettings>(SettingsFullPath);
             
             if (settings != null) return settings;
             
+            if(!Directory.Exists(SettingsPath))
+                Directory.CreateDirectory(SettingsPath);
+            
             settings = CreateInstance<CollectionsSettings>();
             settings.FindCollections();
-            AssetDatabase.CreateAsset(settings, SettingsPath);
+            AssetDatabase.CreateAsset(settings, SettingsFullPath);
             AssetDatabase.SaveAssets();
 
             return settings;
