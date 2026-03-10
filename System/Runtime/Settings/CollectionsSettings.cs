@@ -54,8 +54,14 @@ namespace VV.Collecting
             sr.Write("    }\n" +
                      "}");
             sr.Close();
-            
+
+            EditorApplication.delayCall += RefreshAssetDelayed;
+        }
+
+        protected virtual void RefreshAssetDelayed()
+        {
             AssetDatabase.Refresh();
+            EditorApplication.delayCall -= RefreshAssetDelayed;
         }
         
         public void FindCollections()

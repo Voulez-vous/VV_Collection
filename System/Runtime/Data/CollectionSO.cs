@@ -184,7 +184,7 @@ namespace VV.Collecting
                 string assetPath = AssetDatabase.GUIDToAssetPath(assetGUID);
                 CollectableSOBase collectableSO = AssetDatabase.LoadAssetAtPath<CollectableSOBase>(assetPath);
                 
-                collectableSO.GenerateNewGUID();
+                collectableSO.GenerateNewGuid();
                 
                 if(!collectableCollection.Contains(collectableSO)) 
                     collectableCollection.Add(collectableSO);

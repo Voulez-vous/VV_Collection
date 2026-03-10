@@ -1,11 +1,10 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using VV.Utility;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using VInspector;
-using VV.Utility;
 #endif
 
 namespace VV.Collecting
@@ -22,14 +21,14 @@ namespace VV.Collecting
         public static event UnityAction<CollectableSOBase> CollectableCreated;
         public static event UnityAction<CollectableSOBase> CollectableDestroyed;
         
-        [SerializeField] [Utility.ReadOnly] private string uniqueId;
-        [SerializeField] [Utility.ReadOnly] private string instanceId;
+        [SerializeField] [ReadOnly] private string uniqueId;
+        [SerializeField] [ReadOnly] private string instanceId;
         
         public string UniqueId => uniqueId;
         public string InstanceId => instanceId;
         
-        [SerializeField] [Utility.ReadOnly] private bool assigned;
-        [SerializeField] [Utility.ReadOnly] private string sceneName;
+        [SerializeField] [ReadOnly] private bool assigned;
+        [SerializeField] [ReadOnly] private string sceneName;
 
         public bool Assigned
         {
@@ -72,25 +71,25 @@ namespace VV.Collecting
         
 #if UNITY_EDITOR
         [Button]
-        public void GenerateNewGUID()
+        public virtual void GenerateNewGuid()
         {
             uniqueId = Guid.NewGuid().ToString();
             Save();
             Debug.Log($"{name} unique id updated to {uniqueId} with Button");
         }
         
-        private void Awake()
+        protected virtual void Awake()
         {
             if (!String.IsNullOrEmpty(UniqueId)) return;
             
             Debug.Log($"{name} unique id {uniqueId}");
-            uniqueId = Guid.NewGuid().ToString();
+            GenerateNewGuid();
             Debug.Log($"{name} unique id updated to {uniqueId} with Awake");
             
             CollectableCreated?.Invoke(this);
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             CollectableDestroyed?.Invoke(this);
         }
@@ -125,7 +124,7 @@ namespace VV.Collecting
 
         #endregion
 
-        private void Save()
+        protected virtual void Save()
         {
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
