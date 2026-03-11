@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace VV.Collecting
@@ -22,6 +23,14 @@ namespace VV.Collecting
         {
             // Use IMGUI to display UI:
             EditorGUILayout.PropertyField(_settings.FindProperty("activeCollections"));
+            
+            GUIStyle style = new GUIStyle(GUI.skin.button)
+            {
+                fixedWidth = 200,
+                fixedHeight = 40
+            };
+            if (GUILayout.Button("Generate Collection Enum", style))
+                CollectionsSettings.GetOrCreateSettings().GenerateEnum();
             
             _settings.ApplyModifiedPropertiesWithoutUndo();
         }

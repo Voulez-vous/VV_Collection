@@ -26,7 +26,7 @@ namespace VV.Collecting
             GenerateEnum();
         }
 
-        [Button]
+        [Button(engine = AttributeEngine.UIToolkit)]
         public void GenerateEnum()
         {
             string fileName = "CollectionType.cs";
@@ -95,7 +95,7 @@ namespace VV.Collecting
             FindCollections();
         }
 
-        private static CollectionsSettings GetOrCreateSettings()
+        public static CollectionsSettings GetOrCreateSettings()
         {
             var settings = AssetDatabase.LoadAssetAtPath<CollectionsSettings>(SettingsFullPath);
             
