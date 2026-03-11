@@ -21,9 +21,9 @@ namespace VV.Collecting
 
         public override void OnGUI(string searchContext)
         {
-            // Use IMGUI to display UI:
             EditorGUILayout.PropertyField(_settings.FindProperty("activeCollections"));
             
+            EditorGUILayout.PropertyField(_settings.FindProperty("enumFolderPath"));
             GUIStyle style = new GUIStyle(GUI.skin.button)
             {
                 fixedWidth = 200,

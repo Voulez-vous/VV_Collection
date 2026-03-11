@@ -6,11 +6,12 @@ using VV.Utility;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.Build;
 #endif
 
 namespace VV.Collecting
 {
-    public class CollectionsSettings : ScriptableObject
+    public sealed class CollectionsSettings : ScriptableObject
     {
         public static string SettingsName => "CollectionsSettings";
         public static string SettingsResourcePath => $"VV/Collecting/";
@@ -18,21 +19,33 @@ namespace VV.Collecting
         public static string SettingsPath => $"Assets/Resources/{SettingsResourcePath}";
         public static string SettingsFullPath => $"{SettingsPath}/{SettingsName}.asset";
         
+        public static readonly string EnumFileName = "CollectionType.cs";
+        
+        public static string AsmRefName => "voulezvous.collection.enum.asmref";
+        
         [SerializeField] public List<CollectionSO> activeCollections = new();
+        public string enumFolderPath = "Assets/Resources/Collecting/";
+        
+        public string EnumFullPath => $"{enumFolderPath}{EnumFileName}";
+        public string AsmRefFullPath => $"{enumFolderPath}{AsmRefName}";
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            GenerateEnum();
+            // GenerateEnum();
         }
 
         [Button(engine = AttributeEngine.UIToolkit)]
         public void GenerateEnum()
         {
-            string fileName = "CollectionType.cs";
             string namespaceEnum = "Collecting";
-            string assetPath = Path.GetDirectoryName("Packages/com.vv.collection/System/");
-            string path = string.Concat(assetPath, Path.DirectorySeparatorChar, fileName);
+            string folderPath = "Assets/Resources/Collecting/";
+            string assetPath = Path.GetDirectoryName(folderPath);
+            
+            if(!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+            
+            string path = string.Concat(assetPath, Path.DirectorySeparatorChar, EnumFileName);
             FileStream fs = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write);
             fs.SetLength(0);
             StreamWriter sr = new StreamWriter(fs);
@@ -40,7 +53,7 @@ namespace VV.Collecting
                      $"namespace VV.{namespaceEnum}\n" +
                      "{\n" +
                      "    [Serializable]\n" +
-                     $"    public enum {fileName.Replace(".cs", "")}\n" +
+                     $"    public enum {EnumFileName.Replace(".cs", "")}\n" +
                      "    {\n");
             foreach (CollectionSO collection in 
                      activeCollections
@@ -55,10 +68,59 @@ namespace VV.Collecting
                      "}");
             sr.Close();
 
+            CreateAsmRef();
+
+            CreateCustomEnumDefine();
+
             EditorApplication.delayCall += RefreshAssetDelayed;
         }
 
-        protected virtual void RefreshAssetDelayed()
+        public static void CreateCustomEnumDefine()
+        {
+            NamedBuildTarget namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(
+                EditorUserBuildSettings.selectedBuildTargetGroup
+            );
+            PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget, out string[] defines);
+            
+            List<string> definesList = defines.ToList();
+
+            if(!definesList.Contains(CollectionConstants.CollectionTypeDefineName))
+                definesList.AddUnique(CollectionConstants.CollectionTypeDefineName);
+            
+            defines = definesList.ToArray();
+            
+            PlayerSettings.SetScriptingDefineSymbols(namedBuildTarget, defines);
+        }
+        
+        public static void RemoveCustomEnumDefine()
+        {
+            NamedBuildTarget namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(
+                EditorUserBuildSettings.selectedBuildTargetGroup
+            );
+
+            PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget, out string[] defines);
+
+            ArrayUtility.Remove(ref defines, CollectionConstants.CollectionTypeDefineName);
+
+            PlayerSettings.SetScriptingDefineSymbols(namedBuildTarget, defines);
+        }
+
+        /// <summary>
+        /// Allows the package access to the enum generated in the project.
+        /// </summary>
+        public void CreateAsmRef()
+        {
+            if(!File.Exists(AsmRefFullPath))
+                File.WriteAllText(AsmRefFullPath, "{\n    \"reference\": \"CollectionSystemAssembly\"\n}");
+        }
+
+        public void DeleteAsmRef()
+        {
+            if(File.Exists(AsmRefFullPath))
+                File.Delete(AsmRefFullPath);
+        }
+
+        private void RefreshAssetDelayed()
         {
             AssetDatabase.Refresh();
             EditorApplication.delayCall -= RefreshAssetDelayed;
