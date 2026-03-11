@@ -37,26 +37,26 @@ namespace VV.Collecting
         
         public RuntimeCollection RuntimeCollectionTemplate => runtimeCollectionTemplate;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             CollectableSOBase.CollectableCreated += OnCollectableCreated;
             CollectableSOBase.CollectableDestroyed += OnCollectableDestroyed;
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             CollectableSOBase.CollectableCreated -= OnCollectableCreated;
             CollectableSOBase.CollectableDestroyed -= OnCollectableDestroyed;
         }
 
-        void OnCollectableCreated(CollectableSOBase collectable)
+        protected virtual void OnCollectableCreated(CollectableSOBase collectable)
         {
             if (!collectable.name.Contains(collectionName) || collectableCollection.Contains(collectable)) return;
             
             collectableCollection.Add(collectable);
         }
         
-        void OnCollectableDestroyed(CollectableSOBase collectable)
+        protected virtual void OnCollectableDestroyed(CollectableSOBase collectable)
         {
             if(!collectableCollection.Contains(collectable))
                 return;
@@ -64,7 +64,7 @@ namespace VV.Collecting
             collectableCollection.Remove(collectable);
         }
 
-        public void Add(CollectableSOBase collectable)
+        public virtual void Add(CollectableSOBase collectable)
         {
             if(collectableCollection.Contains(collectable))
                 return;
@@ -82,6 +82,7 @@ namespace VV.Collecting
                 return String.Join('/', folders);
             }
         }
+        
         public string FolderCollectionPath => Path.Combine(CurrentFolder, collectionName);
 
         public CollectableSOBase SaveCollectableSoAsset(CollectableSOBase newCollectableSoBase, int index)
@@ -175,7 +176,7 @@ namespace VV.Collecting
         /// <summary>
         /// Used to fix a serialisation issue.
         /// </summary>
-        public void ResaveAllCollectables()
+        public virtual void ResaveAllCollectables()
         {
             var assetGUIDs = AssetDatabase.FindAssets("t:CollectableSOBase", new[] { FolderCollectionPath });
 
@@ -193,7 +194,7 @@ namespace VV.Collecting
             }
         }
         
-        public void GenerateNewGUID()
+        public virtual void GenerateNewGuid()
         {
             if(!String.IsNullOrEmpty(uniqueId)) return;
             
@@ -202,12 +203,12 @@ namespace VV.Collecting
             Debug.Log($"New {name} unique id : {uniqueId}");
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            GenerateNewGUID();
+            GenerateNewGuid();
         }
 
-        protected void Save()
+        protected virtual void Save()
         {
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();

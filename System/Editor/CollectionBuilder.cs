@@ -34,7 +34,7 @@ namespace VV.Collecting.Editor
 
             // Add buttons
             root.Add(new Button(() => script.GenerateCollectables()) { text = "Generate Collectables" });
-            root.Add(new Button(() => script.GenerateNewGUID()) { text = "Generate GUID" });
+            root.Add(new Button(() => script.GenerateNewGuid()) { text = "Generate GUID" });
             root.Add(new Button(() => script.ResaveAllCollectables()) { text = "Update Collectables" });
 
             return root;
