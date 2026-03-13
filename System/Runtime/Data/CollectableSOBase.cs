@@ -21,14 +21,14 @@ namespace VV.Collecting
         public static event UnityAction<CollectableSOBase> CollectableCreated;
         public static event UnityAction<CollectableSOBase> CollectableDestroyed;
         
-        [SerializeField] [ReadOnly] private string uniqueId;
-        [SerializeField] [ReadOnly] private string instanceId;
+        [SerializeField] [ReadOnly] protected string uniqueId;
+        [SerializeField] [ReadOnly] protected string instanceId;
         
         public string UniqueId => uniqueId;
         public string InstanceId => instanceId;
         
-        [SerializeField] [ReadOnly] private bool assigned;
-        [SerializeField] [ReadOnly] private string sceneName;
+        [SerializeField] [ReadOnly] protected bool assigned;
+        [SerializeField] [ReadOnly] protected string sceneName;
 
         public bool Assigned
         {
