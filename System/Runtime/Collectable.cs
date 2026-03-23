@@ -48,6 +48,7 @@ namespace VV.Collecting
                 InitializedAndNotCollected?.Invoke(this);
         }
 
+        [Button]
         public virtual void Collect()
         {
             if(!enabled) return;
