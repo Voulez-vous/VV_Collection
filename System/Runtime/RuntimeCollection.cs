@@ -13,7 +13,7 @@ namespace VV.Collecting
         [SerializeField] [ReadOnly]
         protected List<string> collectedIds = new();
         
-        [SerializeField] private int totalScore;
+        [SerializeField] protected int totalScore;
 
         [field:SerializeField] [Utility.ReadOnly] public CollectionSO CollectionSO { get; set; }
         [field:SerializeField] [Utility.ReadOnly] public CollectionType CollectionType { get; set; }
@@ -24,12 +24,12 @@ namespace VV.Collecting
         public UnityEvent<RuntimeCollection> CollectableStored;
         public UnityEvent<CollectionUpdateData> onCollectionProgressUpdate = new();
         
-        private void Awake()
+        protected virtual void Awake()
         {
             CollectableSOBase.AnyCollected += OnCollected;
         }
 
-        public CollectionUpdateData GenerateUpdateData(int delta = 1)
+        public virtual CollectionUpdateData GenerateUpdateData(int delta = 1)
         {
             return new CollectionUpdateData
             {
@@ -39,7 +39,7 @@ namespace VV.Collecting
             };
         }
 
-        private void OnCollected(Collectable collectable)
+        protected virtual void OnCollected(Collectable collectable)
         {
             CollectableSOBase collectableSOBase = collectable.CollectableSo;
             string collectedId = collectableSOBase.UniqueId;
@@ -53,8 +53,8 @@ namespace VV.Collecting
             onCollectionProgressUpdate?.Invoke(GenerateUpdateData());
         }
         
-        public bool Contains(Collectable collectable) => collectedIds.Contains(collectable.CollectableSo.UniqueId);
-        public bool Contains(string collectableId) => collectedIds.Contains(collectableId);
+        public virtual bool Contains(Collectable collectable) => collectedIds.Contains(collectable.CollectableSo.UniqueId);
+        public virtual bool Contains(string collectableId) => collectedIds.Contains(collectableId);
         
         /// <summary>
         /// Tries to execute the collectable's behaviour.
@@ -62,7 +62,7 @@ namespace VV.Collecting
         /// </summary>
         /// <param name="collectableId"></param>
         /// <returns></returns>
-        public bool TryExecuteCollectableBehaviour(string collectableId)
+        public virtual bool TryExecuteCollectableBehaviour(string collectableId)
         {
             var collectables = FindObjectsByType<Collectable>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             foreach (Collectable collectable in collectables)
