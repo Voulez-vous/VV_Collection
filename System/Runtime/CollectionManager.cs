@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
@@ -35,6 +36,7 @@ namespace VV.Collecting
 
         #endregion
         
+        #region Init
         /// <summary>
         /// Called after first scene loaded and after Awake is called.
         /// </summary>
@@ -137,6 +139,7 @@ namespace VV.Collecting
                 };
             }
         }
+        #endregion
 
         public static bool IsCollected(string collectableId)
         {
@@ -242,5 +245,20 @@ namespace VV.Collecting
             CollectionActivated(collectionType) ? RuntimeCollections[collectionType].CollectedIds.Count : -1;
         public static int GetCollectionTotal(CollectionType collectionType) => 
             CollectionActivated(collectionType) ? RuntimeCollections[collectionType].CollectionSO.Count : -1;
+
+        public static T GetRuntimeCollection<T>(CollectionType type = CollectionType.None) where T : RuntimeCollection
+        {
+            if (type == CollectionType.None)
+            {
+                return RuntimeCollections.Values.ToList().ConvertAll(x =>
+                {
+                    if (x is T t)
+                        return t;
+                    return null;
+                }).FirstOrDefault();
+            }
+
+            return (T)RuntimeCollections[type];
+        }
     }
 }
