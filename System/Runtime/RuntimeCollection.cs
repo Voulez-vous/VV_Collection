@@ -31,7 +31,7 @@ namespace VV.Collecting
 
             foreach (CollectionBehaviour collectionBehaviour in CollectionSO.CollectionBehaviours)
             {
-                collectionBehaviour.Init();
+                collectionBehaviour.Init(this);
             }
         }
 
