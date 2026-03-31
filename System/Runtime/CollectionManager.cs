@@ -54,16 +54,9 @@ namespace VV.Collecting
                 OnCollectionProgressUpdated =
                     new Dictionary<CollectionType, UnityAction<CollectionUpdateData>>(customSettings.activeCollections.Count);
 
-                foreach (CollectionSO collectionSO in customSettings.activeCollections)
+                foreach (CollectionSO collectionSo in customSettings.activeCollections)
                 {
-                    string normalizedCollectionName = collectionSO.CollectionName.Replace(" ", "");
-                    if (!Enum.TryParse(normalizedCollectionName, out CollectionType type))
-                    {
-                        Debug.LogError($"Collection {normalizedCollectionName} is not a valid collection name");
-                        continue;
-                    }
-                    
-                    GenerateCollection(collectionSO, type, runtimeCollections.transform);
+                    GenerateCollection(collectionSo, collectionSo.CollectionType, runtimeCollections.transform);
                 }
                 
                 RuntimeCollectionsInitialized?.Invoke();
@@ -102,13 +95,11 @@ namespace VV.Collecting
                     collection = newRuntimeCollection.AddComponent<RuntimeCollection>();
                 }
 
-                collection.CollectionSO = collectionSo;
+                collection.Init(collectionSo);
                     
                 OnCollectionProgressUpdated.Add(collectionType, _ => {});
                 collection.onCollectionProgressUpdate.AddListener(collectionData =>
                     OnCollectionProgressUpdated[collectionType]?.Invoke(collectionData));
-                
-                collection.CollectionType = collectionType;
                 
                 RuntimeCollections.Add(collectionType, collection);
                 CollectionIdToType.Add(collectionSo.UniqueId, collectionType);

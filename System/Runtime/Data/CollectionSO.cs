@@ -37,6 +37,16 @@ namespace VV.Collecting
         public List<CollectionBehaviour> CollectionBehaviours { get; protected set; } = new();
 
         public string CollectionName => collectionName;
+        public CollectionType CollectionType {
+            get {
+                string normalizedCollectionName = CollectionName.Replace(" ", "");
+                
+                if (Enum.TryParse(normalizedCollectionName, out CollectionType type)) return type;
+                
+                Debug.LogError($"Collection {normalizedCollectionName} is not a valid collection name");
+                return CollectionType.None;
+            }
+        }
         
         public int Score => score;
         

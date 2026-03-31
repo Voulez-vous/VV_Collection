@@ -16,8 +16,8 @@ namespace VV.Collecting
         
         [SerializeField] protected int totalScore;
 
-        [field:SerializeField] [Utility.ReadOnly] public CollectionSO CollectionSO { get; set; }
-        [field:SerializeField] [Utility.ReadOnly] public CollectionType CollectionType { get; set; }
+        [field:SerializeField] [Utility.ReadOnly] public CollectionSO CollectionSO { get; protected set; }
+        [field:SerializeField] [Utility.ReadOnly] public CollectionType CollectionType { get; protected set; }
         
         public List<string> CollectedIds => collectedIds;
         
@@ -28,7 +28,13 @@ namespace VV.Collecting
         protected virtual void Awake()
         {
             CollectableSOBase.AnyCollected += OnCollected;
+        }
 
+        public virtual void Init(CollectionSO collectionSo)
+        {
+            CollectionSO = collectionSo;
+            CollectionType = collectionSo.CollectionType;
+            
             foreach (CollectionBehaviour collectionBehaviour in CollectionSO.CollectionBehaviours)
             {
                 collectionBehaviour.Init(this);
