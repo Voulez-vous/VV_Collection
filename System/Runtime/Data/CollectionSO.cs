@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.Properties;
 using VV.Utility;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,8 +27,14 @@ namespace VV.Collecting
         
         [SerializeField] private List<CollectableSOBase> collectableCollection;
         [SerializeField] private string collectionName;
-        [SerializeField] private int score;
+        [SerializeField] 
+        [Obsolete("This field should not be implemented in the package but directly in the projects that needs it.")] 
+        private int score;
         [SerializeField] private RuntimeCollection runtimeCollectionTemplate;
+        
+        
+        [field:SerializeField, DontCreateProperty] [CreateProperty]
+        public List<CollectionBehaviour> CollectionBehaviours { get; protected set; } = new();
 
         public string CollectionName => collectionName;
         

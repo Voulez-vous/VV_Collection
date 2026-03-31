@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Events;
 using VV.Utility;
@@ -27,6 +28,11 @@ namespace VV.Collecting
         protected virtual void Awake()
         {
             CollectableSOBase.AnyCollected += OnCollected;
+
+            foreach (CollectionBehaviour collectionBehaviour in CollectionSO.CollectionBehaviours)
+            {
+                collectionBehaviour.Init();
+            }
         }
 
         public virtual CollectionUpdateData GenerateUpdateData(int delta = 1)
