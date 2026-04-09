@@ -69,24 +69,32 @@ namespace VV.Collecting
             return HashCode.Combine(obj.name, obj.UniqueId);
         }
         
+        protected virtual void Awake()
+        {
 #if UNITY_EDITOR
-        [Button]
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                GenerateNewGuid();
+                
+                CollectableCreated?.Invoke(this);
+            }
+#endif
+        }
+        
+#if UNITY_EDITOR
+        
         public virtual void GenerateNewGuid()
+        {
+            if (!String.IsNullOrEmpty(UniqueId)) return;
+            ReGenerateNewGuid();
+        }
+
+        [Button]
+        public virtual void ReGenerateNewGuid()
         {
             uniqueId = Guid.NewGuid().ToString();
             Save();
             Debug.Log($"{name} unique id updated to {uniqueId} with Button");
-        }
-        
-        protected virtual void Awake()
-        {
-            if (!String.IsNullOrEmpty(UniqueId)) return;
-            
-            Debug.Log($"{name} unique id {uniqueId}");
-            GenerateNewGuid();
-            Debug.Log($"{name} unique id updated to {uniqueId} with Awake");
-            
-            CollectableCreated?.Invoke(this);
         }
 
         protected virtual void OnDestroy()
