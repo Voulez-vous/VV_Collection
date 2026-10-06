@@ -79,7 +79,7 @@ namespace VV.Collecting
             var collectables = FindObjectsByType<Collectable>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             foreach (Collectable collectable in collectables)
             {
-                if (!collectable.CollectableSo.UniqueId.Equals(collectableId)) continue;
+                if (!collectable || !collectable.CollectableSo || !collectable.CollectableSo.UniqueId.Equals(collectableId)) continue;
                 collectable.Behaviour.OnCollected();
                 return true;
             }
